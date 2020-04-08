@@ -47,25 +47,27 @@ class MonteCarloSearchTree:
 
     def pick_unvisited_child(self, node):
         unvisited_children = list(
-            filter(lambda child: child.total_number_of_visits == 0, node.children,)
+            filter(lambda child: child.total_number_of_visits == 0, node.children)
         )
         return random.choice(unvisited_children) if unvisited_children else False
 
     def best_uct(self, node):
         if node.game_object.current_player == node.game_object.starting_player:
             return max(
-                node.children, key=lambda child: self.utc(child, node), default=node,
+                node.children, key=lambda child: self.utc(child, node), default=node
             )
         else:
             return min(
-                node.children, key=lambda child: self.utc_negative(child, node), default=node,
+                node.children,
+                key=lambda child: self.utc_negative(child, node),
+                default=node,
             )
 
     def utc(self, node, parent):
         return self.exploitation_component(node) + self.exploration_component(
             node, parent
         )
-        
+
     def utc_negative(self, node, parent):
         return self.exploitation_component(node) - self.exploration_component(
             node, parent

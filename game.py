@@ -3,33 +3,18 @@ from config import nim as nim_config
 from config import ledge as ledge_config
 from config import general as general_config
 from ledge import Ledge
-from nim import Nim
+from hex import Hex
 
 
 class Game:
     def __init__(self, initial_state=None, current_player=0):
         self.starting_player = self.initialize_starting_player()
         self.current_player = current_player if current_player else self.starting_player
-        self.game = self.select_game(initial_state)
+        self.game = setup_hex(self, initial_state)
 
-    def select_game(self, initial_state):
-        name = general_config["game"]
-        if name == "nim":
-            return self.setup_nim(initial_state)
-        elif name == "ledge":
-            return self.setup_ledge(initial_state)
-        else:
-            raise Exception("Invalid name in game configuration")
-
-    def setup_nim(self, initial_state):
-        pieces = initial_state if initial_state != None else nim_config["pieces"]
-        return Nim(pieces=pieces, max_take=nim_config["max_take"])
-
-    def setup_ledge(self, initial_state):
-        board = (
-            initial_state if initial_state != None else ledge_config["initial_board"]
-        )
-        return Ledge(initial_board=board)
+    def setup_hex(self, initial_state):
+        state = initial_state if initial_state != None else nim_config["pieces"]
+        return Hex(state=state, max_take=nim_config["max_take"])
 
     def initialize_starting_player(self):
         player = general_config["starting_player"]
@@ -47,7 +32,7 @@ class Game:
             self.current_player = 1
 
     def move(self, action, verbose):
-        is_end_state = self.game.move(action)
+        is_end_state = self.game.move(action, self.current_player)
         if verbose:
             print(self.game.get_verbose(self.current_player, action))
             if is_end_state:

@@ -3,20 +3,19 @@ from direction import Direction
 from config import board as config
 
 
-class Board:
+class Hex:
     board = []
 
-    def __init__(self, size, boardType="D", state=""):
-        if boardType == "D":
-            self.board = [[Node(i, j) for j in range(size)] for i in range(size)]
-        elif boardType == "T":
-            self.board = [[Node(i, j) for j in range(size - i)] for i in range(size)]
+    def __init__(self, size, state=""):
+        self.board = [[Node(i, j) for j in range(size)] for i in range(size)]
         if state:
             count = 0
             for i in range(len(self.board)):
                 for j in range(len(self.board[i])):
-                    if state[count] == "0":
-                        self.board[i][j].empty = True
+                    if state[count] == "1":
+                        self.board[i][j].owner = 1
+                    elif state[count] == "2":
+                        self.board[i][j].owner = 2
                     count += 1
         self.set_all_neighbours(self.board)
 
@@ -27,8 +26,8 @@ class Board:
         legalMoves = []
         for row in self.board:
             for node in row:
-                for legalMove in node.legalMoves():
-                    legalMoves.append(legalMove)
+                if not node.owner:
+                    legalMoves.append(node.coordinates)
         return legalMoves
 
     def set_all_neighbours(self, board):
@@ -49,18 +48,49 @@ class Board:
         node.legal_moves()
 
     def is_end_state(self):
-        return not len(self.get_legal_moves())
+        for row in self.board:
+            for node in row:
+                node.visited = False
+        for i in range(len(self.board)):
+            endState = search_for_other_edge(self.board[0][i])
+            if endState:
+                return endState
+        for i in range(len(self.board)):
+            endState = search_for_other_edge(self.board[i][0])
+            if endState:
+                return endState
+        return endState
+
+    def search_for_other_edge(self, node, initial_node):
+        opposite_sides = is_on_opposite_sides(node, initial_node)
+        if opposite_sides:
+            return True
+        not_visited_neighbours = filter(
+            lambda node: not node.visited, node.get_connected_neighbours()
+        )
+        booleans = [
+            search_for_other_edge(self, neighbour, initial_node)
+            for neighbour in not_visited_neighbours
+        ]
+        return True in booleans
+
+    def is_on_opposite_sides(self, node, initial_node):
+        delta_x = abs(node.coordinates[0] - initial_node.coordinates[0])
+        delta_y = abs(node.coordinates[1] - initial_node.coordinates[1])
+        return delta_x == self.size or delta_y == self.size
 
     def get_state(self):
-        get_bit_from_node = lambda node: str(int(node.empty))
-        return [[get_bit_from_node(node) for node in row]for row in self.board]  
+        get_bit_from_node = lambda node: str(node.owner) if node.owner else 0
+        return [[get_bit_from_node(node) for node in row] for row in self.board]
 
-    def move(self, action):
+    def move(self, action, current_player):
         if action:
             node = self.get_node_from_coordinates(action[0])
-            node.move(action[1])
-        self.updateBitString()
-        return self.is_end_state() 
+            if not node.owner:
+                node.owner = current_player
+            else:
+                raise Exception("Move is not legal")
+        return self.is_end_state()
 
     def get_node_from_coordinates(self, coordinates):
         return self.board[coordinates[0]][coordinates[1]]
