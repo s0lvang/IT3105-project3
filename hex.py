@@ -7,20 +7,13 @@ class Hex:
     board = []
     drawer = Drawer()
 
-    def __init__(self, size, state=""):
-        self.board = [[Node(i, j) for j in range(size)] for i in range(size)]
-        self.size = size
+    def __init__(self, size, state=None):
         if state:
-            count = 0
-            for i in range(len(self.board)):
-                for j in range(len(self.board[i])):
-                    if state[count] == "1":
-                        self.board[i][j].owner = 1
-                    elif state[count] == "2":
-                        self.board[i][j].owner = 2
-                    count += 1
+            self.board = [[Node(i, j, owner=state[i][j]) for j in range(size)] for i in range(size)]
+        else:
+            self.board = [[Node(i, j, owner=0) for j in range(size)] for i in range(size)]
+        self.size = size
         self.set_all_neighbours(self.board)
-        self.drawer.draw(self.board)
 
     def position_is_on_board(self, r, c):
         return 0 <= r and len(self.board) > r and 0 <= c and len(self.board[r]) > c
@@ -83,8 +76,7 @@ class Hex:
         return delta_x == self.size - 1 or delta_y == self.size - 1
 
     def get_state(self):
-        get_bit_from_node = lambda node: str(node.owner) if node.owner else 0
-        return [[get_bit_from_node(node) for node in row] for row in self.board]
+        return [[node.owner for node in row] for row in self.board]
 
     def move(self, action, current_player):
         if action:
@@ -93,7 +85,6 @@ class Hex:
                 node.owner = current_player
             else:
                 raise Exception("Move is not legal")
-        self.drawer.draw(self.board)
         return self.is_end_state()
 
     def reward(self):

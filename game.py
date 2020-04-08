@@ -1,6 +1,5 @@
 import random
-from config import nim as nim_config
-from config import ledge as ledge_config
+from config import hex as hex_config
 from config import general as general_config
 from ledge import Ledge
 from hex import Hex
@@ -13,8 +12,7 @@ class Game:
         self.game = self.setup_hex(initial_state)
 
     def setup_hex(self, initial_state):
-        state = None  # initial_state if initial_state != None else nim_config["pieces"]
-        return Hex(state=state, size=4)
+        return Hex(state=initial_state, size=hex_config["size"])
 
     def initialize_starting_player(self):
         player = general_config["starting_player"]
@@ -34,7 +32,6 @@ class Game:
     def move(self, action, verbose):
         is_end_state = self.game.move(action, self.current_player)
         if verbose:
-            print(self.game.get_verbose(self.current_player, action))
             if is_end_state:
                 print(f"Player {self.current_player} wins!")
         self.switch_current_player()
@@ -72,7 +69,3 @@ class Game:
 
     def __repr__(self):
         return self.__str__()
-
-
-game = Game()
-game.play_randomly()

@@ -2,8 +2,8 @@ from direction import Direction
 
 
 class Node:
-    def __init__(self, r, c):
-        self.owner = None
+    def __init__(self, r, c, owner):
+        self.owner = owner
         self.coordinates = (r, c)
         self.neighbours = {
             Direction.UP: None,
@@ -40,7 +40,7 @@ class Node:
             n.coordinates
             for n in filter(lambda neighbour: neighbour, self.neighbours.values())
         ]
-        return f"Node: ({self.coordinates}),  Empty: {self.empty}, Neighbours: {neighbours_representation}"
+        return f"Node: ({self.coordinates}),  Owner: {self.owner}, Neighbours: {neighbours_representation}"
 
     def __repr__(self):
         return self.__str__()
