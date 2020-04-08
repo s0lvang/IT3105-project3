@@ -1,7 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-from board import Board
-from config import agent as game
 import numpy as np
 
 
@@ -17,28 +15,42 @@ class Drawer:
                 if neighbour:
                     G.add_edge(node.coordinates, neighbour.coordinates)
         empty_nodes = list(
-            map(lambda node: node.coordinates, filter(lambda node: node.empty, nodes))
-        )
-        full_nodes = list(
             map(
                 lambda node: node.coordinates,
-                filter(lambda node: not node.empty, nodes),
+                filter(lambda node: not node.owner, nodes),
+            )
+        )
+        player1_nodes = list(
+            map(
+                lambda node: node.coordinates,
+                filter(lambda node: not node.owner == 1, nodes),
+            )
+        )
+        player2_nodes = list(
+            map(
+                lambda node: node.coordinates,
+                filter(lambda node: not node.owner == 2, nodes),
             )
         )
 
-        pos = self.generate_pos(board, full_nodes)
+        pos = self.generate_pos(board)
         fig, ax = plt.subplots()
-        nx.draw_networkx_nodes(G, ax=ax, pos=pos, nodelist=full_nodes, node_color="r")
         nx.draw_networkx_nodes(
-            G, ax=ax, pos=pos, nodelist=empty_nodes, node_color="blue"
+            G, ax=ax, pos=pos, nodelist=player1_nodes, node_color="r"
+        )
+        nx.draw_networkx_nodes(
+            G, ax=ax, pos=pos, nodelist=player2_nodes, node_color="black"
+        )
+        nx.draw_networkx_nodes(
+            G, ax=ax, pos=pos, nodelist=empty_nodes, node_color="white"
         )
         nx.draw_networkx_edges(G, ax=ax, pos=pos)
-        nx.draw_networkx_labels(G, ax=ax, pos=pos, font_color="black")
+        # nx.draw_networkx_labels(G, ax=ax, pos=pos, font_color="black")
         ax.invert_yaxis()
         plt.axis("off")
-        plt.show(block=False)
+        plt.show(block=True)
 
-    def generate_pos(self, board, full_nodes):
+    def generate_pos(self, board):
         pos = {}
         for i in range(len(board)):
             for j in range(len(board[i])):

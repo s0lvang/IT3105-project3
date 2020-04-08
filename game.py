@@ -10,11 +10,11 @@ class Game:
     def __init__(self, initial_state=None, current_player=0):
         self.starting_player = self.initialize_starting_player()
         self.current_player = current_player if current_player else self.starting_player
-        self.game = setup_hex(self, initial_state)
+        self.game = self.setup_hex(initial_state)
 
     def setup_hex(self, initial_state):
-        state = initial_state if initial_state != None else nim_config["pieces"]
-        return Hex(state=state, max_take=nim_config["max_take"])
+        state = None  # initial_state if initial_state != None else nim_config["pieces"]
+        return Hex(state=state, size=4)
 
     def initialize_starting_player(self):
         player = general_config["starting_player"]
@@ -72,3 +72,7 @@ class Game:
 
     def __repr__(self):
         return self.__str__()
+
+
+game = Game()
+game.play_randomly()

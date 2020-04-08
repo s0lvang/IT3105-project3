@@ -1,13 +1,15 @@
-from node import Node
+from board_node import Node
 from direction import Direction
-from config import board as config
+from drawer import Drawer
 
 
 class Hex:
     board = []
+    drawer = Drawer()
 
     def __init__(self, size, state=""):
         self.board = [[Node(i, j) for j in range(size)] for i in range(size)]
+        self.size = size
         if state:
             count = 0
             for i in range(len(self.board)):
@@ -18,6 +20,7 @@ class Hex:
                         self.board[i][j].owner = 2
                     count += 1
         self.set_all_neighbours(self.board)
+        self.drawer.draw(self.board)
 
     def position_is_on_board(self, r, c):
         return 0 <= r and len(self.board) > r and 0 <= c and len(self.board[r]) > c
@@ -45,31 +48,31 @@ class Hex:
             Direction.LEFT: self.left_neighbour(node),
         }
         node.set_neighbours(neighbours)
-        node.legal_moves()
 
     def is_end_state(self):
         for row in self.board:
             for node in row:
                 node.visited = False
         for i in range(len(self.board)):
-            endState = search_for_other_edge(self.board[0][i])
+            endState = self.search_for_other_edge(self.board[0][i], self.board[0][i])
             if endState:
                 return endState
         for i in range(len(self.board)):
-            endState = search_for_other_edge(self.board[i][0])
+            endState = self.search_for_other_edge(self.board[i][0], self.board[i][0])
             if endState:
                 return endState
         return endState
 
     def search_for_other_edge(self, node, initial_node):
-        opposite_sides = is_on_opposite_sides(node, initial_node)
+        node.visited = True
+        opposite_sides = self.is_on_opposite_sides(node, initial_node)
         if opposite_sides:
             return True
         not_visited_neighbours = filter(
             lambda node: not node.visited, node.get_connected_neighbours()
         )
         booleans = [
-            search_for_other_edge(self, neighbour, initial_node)
+            self.search_for_other_edge(neighbour, initial_node)
             for neighbour in not_visited_neighbours
         ]
         return True in booleans
@@ -77,7 +80,7 @@ class Hex:
     def is_on_opposite_sides(self, node, initial_node):
         delta_x = abs(node.coordinates[0] - initial_node.coordinates[0])
         delta_y = abs(node.coordinates[1] - initial_node.coordinates[1])
-        return delta_x == self.size or delta_y == self.size
+        return delta_x == self.size - 1 or delta_y == self.size - 1
 
     def get_state(self):
         get_bit_from_node = lambda node: str(node.owner) if node.owner else 0
@@ -85,12 +88,18 @@ class Hex:
 
     def move(self, action, current_player):
         if action:
-            node = self.get_node_from_coordinates(action[0])
+            node = self.get_node_from_coordinates(action)
             if not node.owner:
                 node.owner = current_player
             else:
                 raise Exception("Move is not legal")
+        self.drawer.draw(self.board)
         return self.is_end_state()
+
+    def reward(self):
+        if self.is_end_state():
+            return -1
+        return
 
     def get_node_from_coordinates(self, coordinates):
         return self.board[coordinates[0]][coordinates[1]]

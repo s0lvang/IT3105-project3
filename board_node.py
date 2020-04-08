@@ -28,7 +28,10 @@ class Node:
     def get_connected_neighbours(self):
         if self.owner:
             return list(
-                filter(lambda neighbour: neighbour and neighbour.owner == self.owner)
+                filter(
+                    lambda neighbour: neighbour and neighbour.owner == self.owner,
+                    self.neighbours.values(),
+                )
             )
         return []
 
