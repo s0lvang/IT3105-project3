@@ -1,12 +1,16 @@
 from node import MonteCarloSearchNode
 import random, math
 from game import Game
+from policy import Policy
+from config import hex as hex_config
+import numpy as np
 
 
 class MonteCarloSearchTree:
-    def __init__(self, M, c):
+    def __init__(self, M, c, policy):
         self.M = M
         self.c = c
+        self.policy = policy
 
     def suggest_action(self, root):
         for _ in range(0, self.M):
@@ -26,8 +30,20 @@ class MonteCarloSearchTree:
         node.expand()
         node.visited = True
         rollout_game = Game(*node.game_object.get_state())
-        result = rollout_game.play_randomly()  # this is our rollout policy
+        result = self.play_game(rollout_game)  # this is our rollout policy
         return result
+
+    def play_game(self, game):
+        while not game.is_end_state():
+            legal_moves = game.get_legal_moves()
+            prediction = self.policy.predict(game.get_state()[0])
+            best_index = np.argmax(prediction[0][: len(legal_moves)])
+            best_move = legal_moves[best_index]
+            game.move(best_move, False)
+        return game.reward()
+
+    def get_distribution(self, node):
+        return [child.total_number_of_visits for child in node.children]
 
     def backpropagate(self, node, result):
         if node:

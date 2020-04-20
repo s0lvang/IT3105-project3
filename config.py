@@ -1,10 +1,5 @@
 hex = dict(size=4)
 
 general = dict(
-    verbose=True,
-    game="ledge",
-    starting_player="one",  # one, two or mix
-    episodes=10,
-    M=100,
-    c=1,
+    verbose=True, starting_player="one", episodes=30, M=20, c=1  # one, two or mix
 )

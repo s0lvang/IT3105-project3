@@ -8,10 +8,14 @@ class Hex:
     drawer = Drawer()
 
     def __init__(self, size, state=None):
+        self.board = [[Node(i, j, owner=0) for j in range(size)] for i in range(size)]
         if state:
-            self.board = [[Node(i, j, owner=state[i][j]) for j in range(size)] for i in range(size)]
-        else:
-            self.board = [[Node(i, j, owner=0) for j in range(size)] for i in range(size)]
+            count = 0
+            for i in range(len(self.board)):
+                for j in range(len(self.board[i])):
+                    if state[count] == 0:
+                        self.board[i][j].owner = state[count]
+                    count += 1
         self.size = size
         self.set_all_neighbours(self.board)
 
@@ -76,7 +80,7 @@ class Hex:
         return delta_x == self.size - 1 or delta_y == self.size - 1
 
     def get_state(self):
-        return [[node.owner for node in row] for row in self.board]
+        return [node.owner for row in self.board for node in row]
 
     def move(self, action, current_player):
         if action:
