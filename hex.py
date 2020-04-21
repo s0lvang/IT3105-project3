@@ -13,8 +13,7 @@ class Hex:
             count = 0
             for i in range(len(self.board)):
                 for j in range(len(self.board[i])):
-                    if state[count] == 0:
-                        self.board[i][j].owner = state[count]
+                    self.board[i][j].owner = state[count]
                     count += 1
         self.size = size
         self.set_all_neighbours(self.board)
