@@ -51,8 +51,6 @@ class MonteCarloSearchTree:
             distribution[index] = child.total_number_of_visits
         return distribution
 
-        # return [child.total_number_of_visits for child in node.children]
-
     def backpropagate(self, node, result):
         if node:
             self.update_stats(node, result)
