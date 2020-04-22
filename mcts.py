@@ -36,7 +36,7 @@ class MonteCarloSearchTree:
     def play_game(self, game):
         while not game.is_end_state():
             legal_moves = game.get_legal_moves()
-            prediction = self.policy.predict(game.get_state()[0])
+            prediction = self.policy.predict([game.current_player] + game.get_state()[0])
             best_index = np.argmax(prediction[0][: len(legal_moves)])
             best_move = legal_moves[best_index]
             game.move(best_move, False)

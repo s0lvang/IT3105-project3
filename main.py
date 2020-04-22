@@ -30,7 +30,7 @@ class Agent:
                 print(node.game_object.get_state())
                 print(action)
                 current_player = game.current_player
-                states.append(node.game_object.get_state()[0])
+                states.append([current_player] + node.game_object.get_state()[0])
                 distribution = mcst.get_distribution(node)
                 distributions.append(
                     distribution
