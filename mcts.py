@@ -35,15 +35,23 @@ class MonteCarloSearchTree:
 
     def play_game(self, game):
         while not game.is_end_state():
-            legal_moves = game.get_legal_moves()
-            prediction = self.policy.predict([game.current_player] + game.get_state()[0])
-            best_index = np.argmax(prediction[0][: len(legal_moves)])
-            best_move = legal_moves[best_index]
+            prediction = self.policy.predict(*game.get_state())
+            best_move = game.get_action_from_output(prediction)
             game.move(best_move, False)
         return game.reward()
 
+    # Game specific
+    # should check the index calculation better
     def get_distribution(self, node):
-        return [child.total_number_of_visits for child in node.children]
+        size = hex_config["size"]
+        distribution = [0 for i in range(size ** 2)]
+        for child in node.children:
+            coordinates = child.move_from_parent
+            index = coordinates[0] * size + coordinates[1]
+            distribution[index] = child.total_number_of_visits
+        return distribution
+
+        # return [child.total_number_of_visits for child in node.children]
 
     def backpropagate(self, node, result):
         if node:

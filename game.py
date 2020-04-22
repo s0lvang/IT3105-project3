@@ -64,6 +64,9 @@ class Game:
             self.move(random.choice(legal_moves), False)
         return self.reward()
 
+    def get_action_from_output(self, output):
+        return self.game.get_action_from_output(output)
+
     def __str__(self):
         return f"GAME: player: {self.current_player}, state: {self.game.get_state()}"
 

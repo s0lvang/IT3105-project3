@@ -25,12 +25,11 @@ class Agent:
             node = MonteCarloSearchNode(
                 is_root=True, game_object=game, parent=None, move_from_parent=None
             )
+            print(_)
             while not game.is_end_state():
                 action, node = mcst.suggest_action(node)
-                print(node.game_object.get_state())
-                print(action)
                 current_player = game.current_player
-                states.append([current_player] + node.game_object.get_state()[0])
+                states.append(node.game_object.get_state())
                 distribution = mcst.get_distribution(node)
                 distributions.append(
                     distribution
