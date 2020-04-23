@@ -1,15 +1,24 @@
+from game import Game
+from mcts import MonteCarloSearchTree
+from node import MonteCarloSearchNode
+from policy import Policy
+from config import general as config
+from config import hex as hex_config
+
+import random
+
 
 class Episode:
-    def __init__(self, policy, verbose):
+    def __init__(self):
+        self.verbose = config["verbose"]
+        self.policy = Policy(hex_config["size"] ** 2)
         self.game = Game()
-        self.mcst = MonteCarloSearchTree(config["M"], config["c"], policy=policy)
+        self.mcst = MonteCarloSearchTree(config["M"], config["c"], policy=self.policy)
         self.starting_node = MonteCarloSearchNode(
             is_root=True, game_object=self.game, parent=None, move_from_parent=None
         )
-        self.policy = policy
         self.states = []
         self.distributions = []
-        self.verbose = verbose
 
     def play(self):
         node = self.starting_node
