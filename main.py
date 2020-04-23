@@ -20,24 +20,52 @@ class Agent:
 
     def play(self):
         for _ in range(1, self.episodes + 1):
-            self.play_episode()
+            episode = Episode(self.policy, self.verbose)
+            episode_states, episode_distributions, winner = episode.play()
+            self.states.append(episode_states)
+            self.distributions.append(episode_distributions)
+            self.update_result(winner)
 
         self.display_result()
 
-    def play_episode(self):
-        game = Game()
-        mcst = MonteCarloSearchTree(config["M"], config["c"], policy=self.policy)
-        node = MonteCarloSearchNode(
-            is_root=True, game_object=game, parent=None, move_from_parent=None
+    def update_result(self, winner):
+        self.stats[winner] += 1
+
+    def display_result(self):
+        print(
+            f"Player 1 won {self.stats[1]}/{self.episodes} ({round(100 * self.stats[1]/self.episodes, 1)}%)"
         )
-        while not game.is_end_state():
-            action, node = mcst.suggest_action(node)
-            current_player = game.current_player
-            self.states.append(node.game_object.get_state())
-            distribution = mcst.get_distribution(node)
+        print(
+            f"Player 2 won {self.stats[2]}/{self.episodes} ({round(100 * self.stats[2]/self.episodes, 1)}%)"
+        )
+
+
+class Episode:
+    def __init__(self, policy, verbose):
+        self.game = Game()
+        self.mcst = MonteCarloSearchTree(config["M"], config["c"], policy=policy)
+        self.starting_node = MonteCarloSearchNode(
+            is_root=True, game_object=self.game, parent=None, move_from_parent=None
+        )
+        self.policy = policy
+        self.states = []
+        self.distributions = []
+        self.verbose = verbose
+
+    def play(self):
+        node = self.starting_node
+        while not self.game.is_end_state():
+            action, node = self.mcst.suggest_action(node)
+            current_player = self.game.current_player
+
+            state = node.game_object.get_state()
+            distribution = self.mcst.get_distribution(node)
+
+            self.states.append(state)
             self.distributions.append(distribution)
-            game.move(action, self.verbose)
-        self.stats[current_player] += 1
+
+            self.game.move(action, self.verbose)
+
         number_in_batch = len(self.states) // 3
         states_batch, distributions_batch = zip(
             *random.sample(
