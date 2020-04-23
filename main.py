@@ -39,7 +39,7 @@ class Agent:
             self.stats[current_player] += 1
             number_in_batch = len(states)//3
             states_batch, distributions_batch = zip(
-                *random.sample(list(zip(states, distributions)), number_in_batch)
+                *random.sample(list(zip(states, distributions)), number_in_batch) #Gives a random sample for training
             )
             self.policy.train_from_batch(states_batch, distributions_batch)
         print(

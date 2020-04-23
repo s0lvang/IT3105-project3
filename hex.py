@@ -36,7 +36,7 @@ class Hex:
             for node in row:
                 self.set_neighbours(node)
 
-    def get_action_from_output(self, output):
+    def get_action_from_network_output(self, output):
         action = None
         output = output[0]
         while not self.is_legal_action(action):

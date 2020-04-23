@@ -36,7 +36,7 @@ class MonteCarloSearchTree:
     def play_game(self, game):
         while not game.is_end_state():
             prediction = self.policy.predict(*game.get_state())
-            best_move = game.get_action_from_output(prediction)
+            best_move = game.get_action_from_network_output(prediction)
             game.move(best_move, False)
         return game.reward()
 

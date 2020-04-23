@@ -25,5 +25,5 @@ class Policy:
         return player + state
 
     def train_from_batch(self, states, distributions):
-        X = [self.prepend_PID(*state) for state in states]
-        self.model.fit(np.array(X), np.array(distributions))
+        states_with_PID = [self.prepend_PID(*state) for state in states]
+        self.model.fit(np.array(states_with_PID), np.array(distributions))
