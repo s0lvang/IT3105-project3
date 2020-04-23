@@ -17,20 +17,19 @@ class Agent:
         self.stats = {1: 0, 2: 0}
 
     def play(self):
+        states = []
+        distributions = []
         for _ in range(1, self.episodes + 1):
-            states = []
-            distributions = []
             game = Game()
             mcst = MonteCarloSearchTree(config["M"], config["c"], policy=self.policy)
             node = MonteCarloSearchNode(
                 is_root=True, game_object=game, parent=None, move_from_parent=None
             )
+            print(_)
             while not game.is_end_state():
                 action, node = mcst.suggest_action(node)
-                print(node.game_object.get_state())
-                print(action)
                 current_player = game.current_player
-                states.append([current_player] + node.game_object.get_state()[0])
+                states.append(node.game_object.get_state())
                 distribution = mcst.get_distribution(node)
                 distributions.append(
                     distribution
@@ -38,7 +37,11 @@ class Agent:
                 )
                 game.move(action, self.verbose)
             self.stats[current_player] += 1
-            self.policy.train_from_batch(states, distributions)
+            number_in_batch = len(states)//3
+            states_batch, distributions_batch = zip(
+                *random.sample(list(zip(states, distributions)), number_in_batch) #Gives a random sample for training
+            )
+            self.policy.train_from_batch(states_batch, distributions_batch)
         print(
             f"Player 1 won {self.stats[1]}/{self.episodes} ({round(100 * self.stats[1]/self.episodes, 1)}%)"
         )

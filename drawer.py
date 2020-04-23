@@ -45,7 +45,7 @@ class Drawer:
             G, ax=ax, pos=pos, nodelist=empty_nodes, node_color="white"
         )
         nx.draw_networkx_edges(G, ax=ax, pos=pos)
-        # nx.draw_networkx_labels(G, ax=ax, pos=pos, font_color="black")
+        nx.draw_networkx_labels(G, ax=ax, pos=pos, font_color="black")
         ax.invert_yaxis()
         plt.axis("off")
         plt.show(block=True)

@@ -1,6 +1,8 @@
 from board_node import Node
 from direction import Direction
 from drawer import Drawer
+import numpy as np
+import math
 
 
 class Hex:
@@ -33,6 +35,25 @@ class Hex:
         for row in board:
             for node in row:
                 self.set_neighbours(node)
+
+    def get_action_from_network_output(self, output):
+        action = None
+        output = output[0]
+        while not self.is_legal_action(action):
+            best_index = np.argmax(output)  # get index with highest value
+            action = (
+                best_index // self.size,
+                best_index % self.size,
+            )  # Get coordinates from flat-list
+            output[best_index] = -math.inf
+        return action
+
+    def is_legal_action(self, action):
+        return (
+            action
+            and self.position_is_on_board(*action)
+            and not self.get_node_from_coordinates(action).owner
+        )
 
     def set_neighbours(self, node):
         neighbours = {
