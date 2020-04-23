@@ -19,17 +19,19 @@ class Agent:
             episode_states, episode_distributions, winner = episode.play()
             self.states += episode_states
             self.distributions += episode_distributions
+            self.train_policy()
             self.update_result(winner)
 
-            number_in_batch = len(self.states) // 3
-            states_batch, distributions_batch = zip(
-                *random.sample(
-                    list(zip(self.states, self.distributions)), number_in_batch
-                )  # Gives a random sample for training
-            )
-            self.policy.train_from_batch(states_batch, distributions_batch)
-
         self.display_result()
+
+    def train_policy(self):
+        number_in_batch = len(self.states) // 3
+        states_batch, distributions_batch = zip(
+            *random.sample(
+                list(zip(self.states, self.distributions)), number_in_batch
+            )  # Gives a random sample for training
+        )
+        self.policy.train_from_batch(states_batch, distributions_batch)
 
     def update_result(self, winner):
         self.stats[winner] += 1
