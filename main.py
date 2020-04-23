@@ -33,7 +33,6 @@ class Agent:
                 distribution = mcst.get_distribution(node)
                 distributions.append(
                     distribution
-                    + [0 for _ in range(0, hex_config["size"] ** 2 - len(distribution))]
                 )
                 game.move(action, self.verbose)
             self.stats[current_player] += 1
