@@ -22,6 +22,7 @@ class Episode:
 
     def play(self):
         node = self.starting_node
+
         while not self.game.is_end_state():
             action, node = self.mcst.suggest_action(node)
             current_player = self.game.current_player
