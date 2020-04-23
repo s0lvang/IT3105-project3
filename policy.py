@@ -2,9 +2,6 @@ import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 
-tf.logging.set_verbosity(tf.logging.ERROR)
-tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
-
 
 class Policy:
     def __init__(self, size):
