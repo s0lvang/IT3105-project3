@@ -26,7 +26,7 @@ class Policy:
     def train_from_batch(self, states, distributions):
         states_with_PID = [self.prepend_PID(*state) for state in states]
         self.model.fit(np.array(states_with_PID), np.array(distributions))
-    
+
     def clone_policy(self):
         new_policy = Policy(self.size)
         old_weights = self.model.get_weights()

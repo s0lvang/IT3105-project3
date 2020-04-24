@@ -15,18 +15,17 @@ class Trainer:
         self.policy = Policy(hex_config["size"] ** 2)
 
     def train(self):
-        policies = {0:self.policy.clone_policy()}
+        policies = {0: self.policy.clone_policy()}
         for episode_number in range(1, self.episodes + 1):
             episode = Episode(self.policy)
             episode_states, episode_distributions, winner = episode.play()
             self.states += episode_states
             self.distributions += episode_distributions
             self.train_policy()
-            if(episode_number%(self.episodes//self.M) == 0):
+            if episode_number % (self.episodes // self.M) == 0:
                 policy_to_save = self.policy.clone_policy()
                 policies[episode_number] = policy_to_save
         return policies
-
 
     def train_policy(self):
         number_in_batch = len(self.states) // 3
