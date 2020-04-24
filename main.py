@@ -7,10 +7,11 @@ def train_policy():
     trainer.train()
     return trainer.policy
 
+
 def play_games(policy1, policy2):
     competition = Competition(policy1, policy2)
     competition.play()
-    
+
 
 policy1 = train_policy()
 policy2 = train_policy()

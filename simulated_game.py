@@ -1,5 +1,7 @@
 from game import Game
 from config import general as config
+
+
 class SimulatedGame:
     def __init__(self, policy_player1, policy_player2):
         self.verbose = config["verbose"]
@@ -14,7 +16,7 @@ class SimulatedGame:
         return current_player
 
     def get_action(self, current_player):
-        policy = self.policies[current_player-1]
+        policy = self.policies[current_player - 1]
         prediction = policy.predict(*self.game.get_state())
         action = self.game.get_action_from_network_output(prediction)
         return action

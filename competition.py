@@ -1,11 +1,12 @@
 from simulated_game import SimulatedGame
 from config import general as config
 
+
 class Competition:
     def __init__(self, policy_player1, policy_player2):
         self.episodes = config["episodes"]
         self.stats = {1: 0, 2: 0}
-        self.policy_player1 = policy_player1 
+        self.policy_player1 = policy_player1
         self.policy_player2 = policy_player2
 
     def play(self):
@@ -15,7 +16,7 @@ class Competition:
             winner = simulated_game.play()
             self.update_result(winner)
         self.display_result()
-    
+
     def update_result(self, winner):
         self.stats[winner] += 1
 
