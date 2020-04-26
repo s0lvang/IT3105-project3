@@ -8,7 +8,7 @@ import random
 class Trainer:
     def __init__(self):
         self.episodes = config["episodes"]
-        self.M = config["M"]
+        self.amount_of_players = config["amount_of_players"]
         self.stats = {1: 0, 2: 0}
         self.states = []
         self.distributions = []
@@ -22,7 +22,7 @@ class Trainer:
             self.states += episode_states
             self.distributions += episode_distributions
             self.train_policy()
-            if episode_number % (self.episodes // self.M) == 0:
+            if episode_number % (self.episodes // self.amount_of_players) == 0:
                 policy_to_save = self.policy.clone_policy()
                 policies[episode_number] = policy_to_save
         return policies
