@@ -10,7 +10,9 @@ class Episode:
         self.verbose = config["verbose"]
         self.policy = policy
         self.game = Game()
-        self.mcst = MonteCarloSearchTree(config["M"], config["c"], policy=self.policy)
+        self.mcst = MonteCarloSearchTree(
+            config["rollouts"], config["c"], policy=self.policy
+        )
         self.starting_node = MonteCarloSearchNode(
             is_root=True, game_object=self.game, parent=None, move_from_parent=None
         )

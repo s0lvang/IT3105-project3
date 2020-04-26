@@ -4,16 +4,25 @@ from competition import Competition
 
 def train_policy():
     trainer = Trainer()
-    trainer.train()
-    return trainer.policy
+    policies = trainer.train()
+    return policies
 
 
-def play_games(policy1, policy2):
-    competition = Competition(policy1, policy2)
+def play_games(policies):
+    print("1")
+    competition = Competition(
+        policies[0], policies[30]
+    )  # temporary until i bother implementing round robin
+    print("2")
+    competition = Competition(
+        policies[10], policies[30]
+    )  # temporary until i bother implementing round robin
+    print("3")
+    competition = Competition(
+        policies[20], policies[30]
+    )  # temporary until i bother implementing round robin
     competition.play()
 
 
-policy1 = train_policy()
-policy2 = train_policy()
-
-play_games(policy1, policy2)
+policies = train_policy()
+play_games(policies)

@@ -1,7 +1,6 @@
 import random
 from config import hex as hex_config
 from config import general as general_config
-from ledge import Ledge
 from hex import Hex
 
 
