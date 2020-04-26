@@ -30,9 +30,9 @@ class Game:
 
     def move(self, action, verbose):
         is_end_state = self.game.move(action, self.current_player)
-        if verbose:
-            if is_end_state:
-                print(f"Player {self.current_player} wins!")
+        # if verbose:
+        #     if is_end_state:
+        #         print(f"Player {self.current_player} wins!")
         self.switch_current_player()
         return self
 

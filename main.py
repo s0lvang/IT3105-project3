@@ -1,5 +1,5 @@
 from trainer import Trainer
-from competition import Competition
+from tournament import Tournament
 
 
 def train_policy():
@@ -9,20 +9,15 @@ def train_policy():
 
 
 def play_games(policies):
-    print("1")
-    competition = Competition(
-        policies[0], policies[30]
-    )  # temporary until i bother implementing round robin
-    print("2")
-    competition = Competition(
-        policies[10], policies[30]
-    )  # temporary until i bother implementing round robin
-    print("3")
-    competition = Competition(
-        policies[20], policies[30]
-    )  # temporary until i bother implementing round robin
-    competition.play()
+    print(policies)
+    topp = Tournament(policies)
+    topp.round_robin()
 
 
+print("initiate training")
 policies = train_policy()
+print("training complete")
+
+print("start playing")
 play_games(policies)
+print("done playing")
