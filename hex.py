@@ -67,9 +67,8 @@ class Hex:
         node.set_neighbours(neighbours)
 
     def is_end_state(self):
-        for row in self.board:
-            for node in row:
-                node.visited = False
+        self.set_nodes_unvisted()
+
         for i in range(len(self.board)):
             endState = self.search_for_other_edge(self.board[0][i], self.board[0][i])
             if endState:
@@ -79,6 +78,11 @@ class Hex:
             if endState:
                 return endState
         return endState
+
+    def set_nodes_unvisted(self):
+        for row in self.board:
+            for node in row:
+                node.visited = False
 
     def search_for_other_edge(self, node, initial_node):
         node.visited = True
