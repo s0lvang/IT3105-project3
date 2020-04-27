@@ -70,19 +70,30 @@ class Hex:
         self.set_nodes_unvisted()
 
         for i in range(len(self.board)):
-            endState = self.search_for_other_edge(self.board[0][i], self.board[0][i])
-            if endState:
-                return endState
+            start_node = self.board[i][0]
+            if self.player_win_state(
+                node=start_node, initial_node=start_node, player=0
+            ):
+                return True
         for i in range(len(self.board)):
-            endState = self.search_for_other_edge(self.board[i][0], self.board[i][0])
-            if endState:
-                return endState
-        return endState
+            start_node = self.board[0][i]
+
+            if self.player_win_state(
+                node=start_node, initial_node=start_node, player=1
+            ):
+                return True
+
+        return False
 
     def set_nodes_unvisted(self):
         for row in self.board:
             for node in row:
                 node.visited = False
+
+    def player_win_state(self, node, initial_node, player):
+        if not node.owner == player:
+            return False
+        return self.search_for_other_edge(node, initial_node)
 
     def search_for_other_edge(self, node, initial_node):
         node.visited = True
