@@ -116,6 +116,9 @@ class Hex:
             return -1
         return
 
+    def draw(self):
+        self.drawer.draw(self.board)
+
     def get_node_from_coordinates(self, coordinates):
         return self.board[coordinates[0]][coordinates[1]]
 

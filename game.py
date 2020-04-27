@@ -69,6 +69,9 @@ class Game:
     def get_action_from_network_output(self, output):
         return self.game.get_action_from_network_output(output)
 
+    def draw(self):
+        self.game.draw()
+
     def __str__(self):
         return f"GAME: player: {self.current_player}, state: {self.game.get_state()}"
 
