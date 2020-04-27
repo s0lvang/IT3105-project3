@@ -3,14 +3,16 @@ import random, math
 from game import Game
 from policy import Policy
 from config import hex as hex_config
+from config import general as config
 import numpy as np
 
 
 class MonteCarloSearchTree:
-    def __init__(self, M, c, policy):
+    def __init__(self, M, c, policy, epsilon=1):
         self.M = M
         self.c = c
         self.policy = policy
+        self.epsilon = epsilon
 
     def suggest_action(self, root):
         for _ in range(0, self.M):
@@ -35,9 +37,13 @@ class MonteCarloSearchTree:
 
     def play_game(self, game):
         while not game.is_end_state():
-            prediction = self.policy.predict(*game.get_state())
-            best_move = game.get_action_from_network_output(prediction)
-            game.move(best_move, False)
+            prob = random.uniform(0, 1)
+            if prob > self.epsilon:
+                prediction = self.policy.predict(*game.get_state())
+                move = game.get_action_from_network_output(prediction)
+            else:
+                move = random.choice(game.get_legal_moves())
+            game.move(move, False)
         return game.reward()
 
     # Game specific

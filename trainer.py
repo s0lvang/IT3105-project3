@@ -9,6 +9,8 @@ class Trainer:
     def __init__(self):
         self.episodes = config["episodes"]
         self.amount_of_players = config["amount_of_players"]
+        self.epsilon = config["epsilon"]
+        self.epsilon_decay_rate = config["epsilon_decay_rate"]
         self.stats = {1: 0, 2: 0}
         self.states = []
         self.distributions = []
@@ -17,11 +19,12 @@ class Trainer:
     def train(self):
         policies = {0: self.policy.clone_policy()}
         for episode_number in range(1, self.episodes + 1):
-            episode = Episode(self.policy)
+            episode = Episode(self.policy, self.epsilon)
             episode_states, episode_distributions, winner = episode.play()
             self.states += episode_states
             self.distributions += episode_distributions
             self.train_policy()
+            self.epsilon *= 1 - self.epsilon_decay_rate
             if episode_number % (self.episodes // self.amount_of_players) == 0:
                 policy_to_save = self.policy.clone_policy()
                 policies[episode_number] = policy_to_save
@@ -31,7 +34,8 @@ class Trainer:
         number_in_batch = len(self.states) // 3
         states_batch, distributions_batch = zip(
             *random.sample(
-                list(zip(self.states, self.distributions)), number_in_batch
+                list(zip(self.states, self.distributions)),
+                number_in_batch,  # it should favorize later states
             )  # Gives a random sample for training
         )
-        self.policy.train_from_batch(states_batch, distributions_batch)
+        self.policy.train_from_batch(self.states, self.distributions)
