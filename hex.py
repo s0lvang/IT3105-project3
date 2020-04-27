@@ -84,8 +84,9 @@ class Hex:
         node.visited = True
         if self.is_on_opposite_sides(node, initial_node):
             return True
+        connected_visitors = node.get_connected_neighbours()
         not_visited_neighbours = filter(
-            lambda node: not node.visited, node.get_connected_neighbours()
+            lambda node: not node.visited, connected_visitors
         )
         booleans = [
             self.search_for_other_edge(neighbour, initial_node)
