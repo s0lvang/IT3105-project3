@@ -19,7 +19,7 @@ class SimulatedGame:
         return current_player
 
     def get_action(self, current_player):
-        if current_player == 0:
+        if current_player == 1:
             policy = self.player1
         else:
             policy = self.player2
