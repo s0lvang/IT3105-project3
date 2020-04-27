@@ -82,8 +82,7 @@ class Hex:
 
     def search_for_other_edge(self, node, initial_node):
         node.visited = True
-        opposite_sides = self.is_on_opposite_sides(node, initial_node)
-        if opposite_sides:
+        if self.is_on_opposite_sides(node, initial_node):
             return True
         not_visited_neighbours = filter(
             lambda node: not node.visited, node.get_connected_neighbours()
