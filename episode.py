@@ -6,12 +6,12 @@ from config import general as config
 
 
 class Episode:
-    def __init__(self, policy):
+    def __init__(self, policy, epsilon):
         self.verbose = config["verbose"]
         self.policy = policy
         self.game = Game()
         self.mcst = MonteCarloSearchTree(
-            config["rollouts"], config["c"], policy=self.policy
+            config["rollouts"], config["c"], policy=self.policy, epsilon=epsilon
         )
         self.starting_node = MonteCarloSearchNode(
             is_root=True, game_object=self.game, parent=None, move_from_parent=None
