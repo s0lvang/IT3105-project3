@@ -82,11 +82,11 @@ class Hex:
 
     def search_for_other_edge(self, node, initial_node):
         node.visited = True
-        opposite_sides = self.is_on_opposite_sides(node, initial_node)
-        if opposite_sides:
+        if self.is_on_opposite_sides(node, initial_node):
             return True
+        connected_visitors = node.get_connected_neighbours()
         not_visited_neighbours = filter(
-            lambda node: not node.visited, node.get_connected_neighbours()
+            lambda node: not node.visited, connected_visitors
         )
         booleans = [
             self.search_for_other_edge(neighbour, initial_node)
@@ -95,6 +95,8 @@ class Hex:
         return True in booleans
 
     def is_on_opposite_sides(self, node, initial_node):
+        if node == initial_node:
+            return False
         delta_x = abs(node.coordinates[0] - initial_node.coordinates[0])
         delta_y = abs(node.coordinates[1] - initial_node.coordinates[1])
         return delta_x == self.size - 1 or delta_y == self.size - 1
@@ -115,6 +117,9 @@ class Hex:
         if self.is_end_state():
             return -1
         return
+
+    def draw(self):
+        self.drawer.draw(self.board)
 
     def get_node_from_coordinates(self, coordinates):
         return self.board[coordinates[0]][coordinates[1]]

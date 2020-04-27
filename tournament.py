@@ -17,7 +17,7 @@ class Tournament:
 
     def play_game(self, player1, player2):
         simulated_game = SimulatedGame(player1[1], player2[1])
-        winner = simulated_game.play()
+        winner = simulated_game.play(True)
         winner = self.determine_winner(winner, player1[0], player2[0])
 
         self.update_result(winner)
