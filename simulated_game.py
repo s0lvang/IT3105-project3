@@ -9,11 +9,13 @@ class SimulatedGame:
         self.player1 = player1
         self.player2 = player2
 
-    def play(self):
+    def play(self, draw):
         while not self.game.is_end_state():
             current_player = self.game.current_player
             action = self.get_action(current_player)
             self.game.move(action, self.verbose)
+            if draw:
+                self.game.draw()
         return current_player
 
     def get_action(self, current_player):
