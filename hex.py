@@ -95,6 +95,8 @@ class Hex:
         return True in booleans
 
     def is_on_opposite_sides(self, node, initial_node):
+        if node == initial_node:
+            return False
         delta_x = abs(node.coordinates[0] - initial_node.coordinates[0])
         delta_y = abs(node.coordinates[1] - initial_node.coordinates[1])
         return delta_x == self.size - 1 or delta_y == self.size - 1
