@@ -5,6 +5,7 @@ from itertools import combinations
 
 class Tournament:
     def __init__(self, players):
+        self.games_in_series = config["games_in_series"]
         self.episodes = config["episodes"]
         self.wins = dict.fromkeys(players.keys(), 0)
         self.players = players
@@ -13,7 +14,11 @@ class Tournament:
         self.present_the_players()
         pairings = list(combinations(self.players.items(), 2))
         for pair in pairings:
-            self.play_game(pair[0], pair[1])
+            for i in range(self.games_in_series):
+                if i % 2 == 0:
+                    self.play_game(pair[0], pair[1])
+                else:
+                    self.play_game(pair[1], pair[0])
 
     def play_game(self, player1, player2):
         simulated_game = SimulatedGame(player1[1], player2[1])
