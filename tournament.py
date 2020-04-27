@@ -26,7 +26,7 @@ class Tournament:
         )
 
     def determine_winner(self, winner, player1_name, player2_name):
-        if winner == 0:
+        if winner == 1:
             return player1_name
         else:
             return player2_name
