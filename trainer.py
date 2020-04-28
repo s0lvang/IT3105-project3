@@ -10,7 +10,7 @@ class Trainer:
         self.episodes = config["episodes"]
         self.amount_of_players = config["amount_of_players"]
         self.epsilon = config["epsilon"]
-        self.epsilon_decay_rate = (1 - self.epsilon) / self.episodes
+        self.epsilon_decay_rate = self.epsilon / self.episodes
         self.states = []
         self.distributions = []
         self.policy = Policy(hex_config["size"] ** 2)
