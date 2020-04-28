@@ -68,53 +68,58 @@ class Hex:
 
     def is_end_state(self):
         self.set_nodes_unvisted()
-
-        for i in range(len(self.board)):
-            start_node = self.board[i][0]
-            if self.player_win_state(
-                node=start_node, initial_node=start_node, player=0
-            ):
-                return True
-        for i in range(len(self.board)):
-            start_node = self.board[0][i]
-
-            if self.player_win_state(
-                node=start_node, initial_node=start_node, player=1
-            ):
-                return True
-
-        return False
+        return self.is_player1_winning() or self.is_player2_winning()
 
     def set_nodes_unvisted(self):
         for row in self.board:
             for node in row:
                 node.visited = False
 
-    def player_win_state(self, node, initial_node, player):
-        if not node.owner == player:
-            return False
-        return self.search_for_other_edge(node, initial_node)
+    def is_player1_winning(self):
+        for i in range(self.size):
+            start_node = self.board[i][0]
 
-    def search_for_other_edge(self, node, initial_node):
+            if not start_node.owner == 1:
+                continue
+
+            if self.search_for_other_edge(start_node, start_node, self.is_bottom_right):
+                return True
+
+    def is_player2_winning(self):
+        for i in range(self.size):
+            start_node = self.board[0][i]
+
+            if not start_node.owner == 2:
+                continue
+
+            if self.search_for_other_edge(start_node, start_node, self.is_bottom_left):
+                return True
+
+    def search_for_other_edge(self, node, initial_node, is_correct_edge):
         node.visited = True
-        if self.is_on_opposite_sides(node, initial_node):
-            return True
-        connected_visitors = node.get_connected_neighbours()
-        not_visited_neighbours = filter(
-            lambda node: not node.visited, connected_visitors
-        )
-        booleans = [
-            self.search_for_other_edge(neighbour, initial_node)
-            for neighbour in not_visited_neighbours
-        ]
-        return True in booleans
 
-    def is_on_opposite_sides(self, node, initial_node):
-        if node == initial_node:
-            return False
-        delta_x = abs(node.coordinates[0] - initial_node.coordinates[0])
-        delta_y = abs(node.coordinates[1] - initial_node.coordinates[1])
-        return delta_x == self.size - 1 or delta_y == self.size - 1
+        if is_correct_edge(node):
+            return True
+
+        connected_neighbours = node.get_connected_neighbours()
+        unvisited_neighbours = filter(
+            lambda node: not node.visited, connected_neighbours
+        )
+        for neighbour in unvisited_neighbours:
+            if self.search_for_other_edge(neighbour, initial_node, is_correct_edge):
+                return True
+
+    def is_top_right(self, node):
+        return node.coordinates[0] == 0
+
+    def is_top_left(self, node):
+        return node.coordinates[1] == 0
+
+    def is_bottom_right(self, node):
+        return node.coordinates[1] == self.size - 1
+
+    def is_bottom_left(self, node):
+        return node.coordinates[0] == self.size - 1
 
     def get_state(self):
         return [node.owner for row in self.board for node in row]
