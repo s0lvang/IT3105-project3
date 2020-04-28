@@ -38,7 +38,7 @@ class Optmizers(Enum):
     )
     
 ANN = dict(
-    hidden_layers=[(30, Activation.SOFTMAX), (20, Activation.SOFTMAX)],
+    hidden_layers=[(30, Activation.RELU), (20, Activation.RELU)],
     learning_rate=lr,
-    optimizer=Optmizers.Adagrad,
+    optimizer=Optmizers.SGD,
 )
