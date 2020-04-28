@@ -17,17 +17,24 @@ class Trainer:
 
     def train(self):
         policies = {0: self.policy.clone_policy()}
-        for episode_number in range(1, self.episodes + 1):
-            print(f"training on episode {episode_number}/{self.episodes}")
-            episode = Episode(self.policy, self.epsilon)
-            episode_states, episode_distributions, winner = episode.play()
-            self.states += episode_states
-            self.distributions += episode_distributions
-            self.train_policy()
-            self.epsilon -= self.epsilon_decay_rate
-            if episode_number % (self.episodes // self.amount_of_players) == 0:
-                policy_to_save = self.policy.clone_policy()
-                policies[episode_number] = policy_to_save
+        try:
+            for episode_number in range(1, self.episodes + 1):
+                print(f"training on episode {episode_number}/{self.episodes}")
+                episode = Episode(self.policy, self.epsilon)
+                episode_states, episode_distributions, winner = episode.play()
+                self.states += episode_states
+                self.distributions += episode_distributions
+                self.train_policy()
+                self.epsilon -= self.epsilon_decay_rate
+                if episode_number % (self.episodes // self.amount_of_players) == 0:
+                    policy_to_save = self.policy.clone_policy()
+                    policies[episode_number] = policy_to_save
+        except(KeyboardInterrupt):
+            policy_to_save = self.policy.clone_policy()
+            policies[episode_number] = policy_to_save
+            return policies
+
+
         return policies
 
     def train_policy(self):
