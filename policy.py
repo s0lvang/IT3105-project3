@@ -34,7 +34,9 @@ class Policy:
         states_with_PID = [self.prepend_PID(*state) for state in states]
         pred = self.model.predict(np.array(states_with_PID[0:5]))
         normalized_distributions = [
-            np.array(distribution) / sum(distribution) for distribution in distributions
+            np.array(distribution)
+            / (np.array(distribution).sum(axis=0, keepdims=1) or 1)
+            for distribution in distributions
         ]
         # for i in range(5):
         #     print(sum(pred[i]), sum(normalized_distributions[i]))

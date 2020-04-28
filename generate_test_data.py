@@ -18,11 +18,13 @@ class Generator:
             if episode_number % episode_number == 0:
                 with open("states4x4.txt", "a+") as file:
                     for state in self.states:
-                        file.write(",".join([str(number) for number in state])+"\n")
+                        file.write(",".join([str(number) for number in state]) + "\n")
                 with open("distributions4x4.txt", "a+") as file:
                     for distribution in self.distributions:
-                        file.write(",".join([str(number) for number in distribution])+"\n")
+                        file.write(
+                            ",".join([str(number) for number in distribution]) + "\n"
+                        )
 
-                
+
 gen = Generator()
 gen.train()
