@@ -32,10 +32,20 @@ class Trainer:
 
     def train_policy(self):
         number_in_batch = len(self.states) // 3
+        states_batch, distributions_batch = self.get_batches()
+        self.policy.train_from_batch(self.states, self.distributions)
+
+    def get_batches(self):
+        number_in_batch = len(self.states)
+        probability_distribution = [
+            ((i // 13) + 1) / len(self.states) for i in range(len(self.states))
+        ]
+        print(probability_distribution)
         states_batch, distributions_batch = zip(
-            *random.sample(
-                list(zip(self.states, self.distributions)),
-                number_in_batch,  # it should favorize later states
+            *random.choices(
+                population=list(zip(self.states, self.distributions)),
+                k=number_in_batch,
+                weights=probability_distribution,  # it should favorize later states
             )  # Gives a random sample for training
         )
-        self.policy.train_from_batch(self.states, self.distributions)
+        return states_batch, distributions_batch
