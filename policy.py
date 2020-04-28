@@ -2,16 +2,21 @@ import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 from sklearn.metrics import accuracy_score
+from config import ANN as config
 
 
 class Policy:
     def __init__(self, size):
+        hidden_layers = config["hidden_layers"]
         self.size = size
         model = keras.Sequential()
         model.add(keras.layers.Dense(10, input_shape=(size + 2,)))
-        model.add(keras.layers.Dense(30))
+        for layer in hidden_layers:
+            model.add(keras.layers.Dense(layer[0], activation=layer[1].value))
         model.add(keras.layers.Dense(size))  # TODO make outputlayer generalized.
-        model.compile(optimizer="adam", loss="mse")
+        model.compile(
+            optimizer=config["optimizer"].value, loss="categorical_crossentropy"
+        )
         self.model = model
 
     def predict(self, state, PID):
