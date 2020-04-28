@@ -36,7 +36,8 @@ class Optmizers(Enum):
     SGD = keras.optimizers.SGD(
         learning_rate=lr, momentum=0.0, nesterov=False, name="SGD"
     )
-    
+
+
 ANN = dict(
     hidden_layers=[(30, Activation.RELU), (20, Activation.RELU)],
     learning_rate=lr,
