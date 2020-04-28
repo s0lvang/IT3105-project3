@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 from sklearn.metrics import accuracy_score
-from config import ANN as config
+from ann_config import ANN as config
 
 
 class Policy:

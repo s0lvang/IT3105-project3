@@ -1,14 +1,13 @@
 from node import MonteCarloSearchNode
 import random, math
 from game import Game
-from policy import Policy
 from config import hex as hex_config
 from config import general as config
 import numpy as np
 
 
 class MonteCarloSearchTree:
-    def __init__(self, M, c, policy, epsilon=1):
+    def __init__(self, M, c, policy=None, epsilon=1):
         self.M = M
         self.c = c
         self.policy = policy
@@ -32,7 +31,10 @@ class MonteCarloSearchTree:
         node.expand()
         node.visited = True
         rollout_game = Game(*node.game_object.get_state())
-        result = self.play_game(rollout_game)  # this is our rollout policy
+        if not self.policy:
+            result = rollout_game.play_randomly()
+        else:
+            result = self.play_game(rollout_game)  # this is our rollout policy
         return result
 
     def play_game(self, game):
