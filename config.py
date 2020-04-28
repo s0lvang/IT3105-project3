@@ -3,11 +3,11 @@ hex = dict(size=4)
 general = dict(
     verbose=True,
     starting_player="one",  # one, two or mix
-    episodes=10,
+    episodes=20,
     amount_of_players=3,
     games_in_series=2,
     c=1,
-    rollouts=5,
+    rollouts=200,  # 300 rollouts
     epsilon=1,
-    epsilon_decay_rate=0.1,
+    epsilon_decay_rate=0.05,
 )
