@@ -24,7 +24,7 @@ def play_games(policies):
 def save_policies(policies):
     rollouts = config["rollouts"]
     episodes = config["episodes"]
-    time = datetime.datetime.now().strftime("%dT%H:%M")
+    time = datetime.datetime.now().strftime("%dT%H_%M")
     filename = f"{rollouts}r{episodes}e-{time}"
     os.mkdir(f"saved_models/{filename}")
     for episode_number, policy in policies.items():
