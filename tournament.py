@@ -25,9 +25,14 @@ class Tournament:
         winner = simulated_game.play(True)
         winner = self.determine_winner(winner, player1[0], player2[0])
 
+        if winner == max(player1[0], player2[0]):
+            evaluation = "Just as expected."
+        else:
+            evaluation = "What an upset!"
+
         self.update_result(winner)
         print(
-            f"In the game between {player1[0]} and {player2[0]}; The winner is {winner}!"
+            f"In the game between {player1[0]} and {player2[0]}; The winner is {winner}! {evaluation}"
         )
 
     def determine_winner(self, winner, player1_name, player2_name):
