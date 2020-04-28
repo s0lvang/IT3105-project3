@@ -26,6 +26,8 @@ def save_policies(policies):
     episodes = config["episodes"]
     time = datetime.datetime.now().strftime("%dT%H_%M")
     filename = f"{rollouts}r{episodes}e-{time}"
+    if not os.path.exists("saved_models"):
+        os.mkdir("saved_models")
     os.mkdir(f"saved_models/{filename}")
     for episode_number, policy in policies.items():
         policy.model.save(f"saved_models/{filename}/{episode_number}")
