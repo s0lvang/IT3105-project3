@@ -9,5 +9,4 @@ general = dict(
     c=1,
     rollouts=200,  # 300 rollouts
     epsilon=1,
-    epsilon_decay_rate=0.05,
 )
