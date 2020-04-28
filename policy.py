@@ -38,9 +38,9 @@ class Policy:
             / (np.array(distribution).sum(axis=0, keepdims=1) or 1)
             for distribution in distributions
         ]
-        for i in range(5):
-            print(sum(pred[i]), sum(normalized_distributions[i]))
-            print(pred[i], normalized_distributions[i])
+        # for i in range(5):
+        #     print(sum(pred[i]), sum(normalized_distributions[i]))
+        #     print(pred[i], normalized_distributions[i])
         self.model.fit(np.array(states_with_PID), np.array(normalized_distributions))
 
     def clone_policy(self):
