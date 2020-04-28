@@ -16,7 +16,6 @@ def train_policy():
 
 
 def play_games(policies):
-    print(policies)
     topp = Tournament(policies)
     topp.round_robin()
 
