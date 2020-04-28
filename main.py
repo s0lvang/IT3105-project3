@@ -43,11 +43,16 @@ def load_policies(directory):
     return policies
 
 
-print("initiate training")
-policies = train_policy()
-print("training complete")
-print("saving policies")
-filename = save_policies(policies)
-print("start playing")
-play_games(policies)
-print("done playing")
+def main():
+    print("initiate training")
+    policies = train_policy()
+    print("training complete")
+    print("saving policies")
+    filename = save_policies(policies)
+    print("start playing")
+    play_games(policies)
+    print("done playing")
+
+
+if __name__ == "__main__":
+    main()

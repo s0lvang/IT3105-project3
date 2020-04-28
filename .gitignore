@@ -163,3 +163,4 @@ env/
 .vscode/
 
 saved_models/
+server.crt
