@@ -12,6 +12,7 @@ general = dict(
     c=1,
     rollouts=2,  # 300 rollouts
     epsilon=1,
+    draw=False,
 )
 
 
