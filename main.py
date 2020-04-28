@@ -1,3 +1,5 @@
+import pyximport
+pyximport.install(language_level=3)
 from trainer import Trainer
 from tournament import Tournament
 from policy import Policy

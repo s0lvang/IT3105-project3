@@ -57,16 +57,3 @@ class Drawer:
                 pos[board[i][j].coordinates] = [300 + i * -30 + j * 30, 30 * i + 30 * j]
         return pos
 
-    def visualize_game(self, history):
-        for s, a in history:
-            board = Board(game["size"], game["boardType"], state=s)
-            plt.pause(game["timeBetweenFrames"])
-            plt.close("all")
-            self.draw(board.board)
-        plt.clf()
-
-    def display_results(self, scores):
-        a = np.convolve(scores, np.ones((100,)) / 100, mode="valid")
-        plt.ylim(0, max(a) + 2)
-        plt.plot(a)
-        plt.show()
