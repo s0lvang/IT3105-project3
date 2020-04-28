@@ -12,7 +12,6 @@ class Trainer:
         self.epsilon = config["epsilon"]
         self.epsilon_decay_rate = (1 - self.epsilon) / self.episodes
         self.epsilon_decay_rate = config["epsilon_decay_rate"]
-        self.stats = {1: 0, 2: 0}
         self.states = []
         self.distributions = []
         self.policy = Policy(hex_config["size"] ** 2)
@@ -42,7 +41,6 @@ class Trainer:
         probability_distribution = [
             ((i // 13) + 1) / len(self.states) for i in range(len(self.states))
         ]
-        print(probability_distribution)
         states_batch, distributions_batch = zip(
             *random.choices(
                 population=list(zip(self.states, self.distributions)),
