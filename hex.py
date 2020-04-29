@@ -7,7 +7,6 @@ import math
 
 class Hex:
     board = []
-    drawer = Drawer()
 
     def __init__(self, size, state=None):
         self.board = [[Node(i, j, owner=0) for j in range(size)] for i in range(size)]
@@ -139,7 +138,7 @@ class Hex:
         return
 
     def draw(self):
-        self.drawer.draw(self.board)
+        Drawer().draw(self.board)
 
     def get_node_from_coordinates(self, coordinates):
         return self.board[coordinates[0]][coordinates[1]]
