@@ -8,33 +8,25 @@ import math
 class Hex:
     def __init__(self, size, state=None):
         if state:
-            self.board = state
+            self.board = [*state]
         else:
             self.board = self.setup_board(size)
 
         self.size = size
 
     def setup_board(self, size):
-        slot = (0, 0)  # node[0]=player1, node[1]=player2
+        slot = (0, 0)  # slot[0]=player1, slot[1]=player2
         return [slot] * (size ** 2)
 
     def get_legal_moves(self):
         board = self.board
         legal_moves = []
-        for i in board:
+        for i in range(len(board)):
             slot = board[i]
             if slot[0] == 0 and slot[1] == 0:
                 legal_moves.append(i)
 
         return legal_moves
-
-    def get_2d_coords(self, index, size):
-        return (index // size, index % size)
-
-    def get_1d_index(self, coords, size):
-        x = coords[0]
-        y = coords[1]
-        return y + (x * size)
 
     def get_action_from_network_output(self, output):  # not done
         action = None
@@ -58,7 +50,7 @@ class Hex:
         return is_on_board and not is_filled
 
     def is_end_state(self):
-        visited = [] * (self.size ** 2)
+        visited = [0] * (self.size ** 2)
         return self.is_player1_winning(visited) or self.is_player2_winning(visited)
 
     def is_player1_winning(self, visited):
@@ -72,8 +64,9 @@ class Hex:
             if not board[i][owner] == 1:
                 continue
 
-            if search_for_other_edge(i, is_bottom_right, visited, owner):
+            if search_for_other_edge(i, is_bottom_right, visited, owner, board, size):
                 return True
+        return False
 
     def is_player2_winning(self, visited):
         board = self.board
@@ -86,15 +79,15 @@ class Hex:
             if not board[i][owner] == 1:
                 continue
 
-            if search_for_other_edge(i, is_bottom_left, visited, owner):
+            if search_for_other_edge(i, is_bottom_left, visited, owner, board, size):
                 return True
+        return False
 
-    def search_for_other_edge(self, i, is_correct_edge, visited, owner):
+    def search_for_other_edge(self, i, is_correct_edge, visited, owner, board, size):
         visited[i] = True
-        board = self.board
-        search = self.search_for_other_edge
+        search_for_other_edge = self.search_for_other_edge
 
-        if is_correct_edge(i):
+        if is_correct_edge(i, size):
             return True
 
         neighbours = self.get_neighbours(i)
@@ -102,7 +95,9 @@ class Hex:
         unvisited = [y for y in connected if visited[y] == 0]
 
         for neighbour in unvisited:
-            if search(neighbour, is_correct_edge, visited, owner):
+            if search_for_other_edge(
+                neighbour, is_correct_edge, visited, owner, board, size
+            ):
                 return True
 
     def get_neighbours(self, i):
@@ -156,4 +151,24 @@ class Hex:
 
 
 if __name__ == "__main__":
-    hex = Hex(4)
+    state = [
+        (0, 1),
+        (1, 0),
+        (1, 0),
+        (0, 1),
+        (0, 1),
+        (1, 0),
+        (1, 0),
+        (1, 0),
+        (1, 0),
+        (1, 0),
+        (0, 1),
+        (0, 1),
+        (1, 0),
+        (0, 1),
+        (0, 1),
+        (0, 1),
+    ]
+    hex = Hex(4, state)
+    print(hex.get_state())
+    print(hex.is_end_state())
