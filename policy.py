@@ -3,6 +3,7 @@ from tensorflow import keras
 import numpy as np
 from sklearn.metrics import accuracy_score
 from ann_config import ANN as config
+from scipy.special import softmax
 
 
 class Policy:
@@ -56,9 +57,7 @@ class Policy:
     def train_from_batch(self, states, distributions, values):
         states_with_PID = [self.prepend_PID(*state) for state in states]
         pred = self.model.predict(np.array(states_with_PID[0:5]))
-        normalized_distributions = [
-            np.array(distribution)
-            / (np.array(distribution).sum(axis=0, keepdims=1) or 1)
+        normalized_distributions = [ softmax(distribution)
             for distribution in distributions
         ]
         Y = {

@@ -10,7 +10,7 @@ class Activation(Enum):
     SOFTMAX = "softmax"
 
 
-lr = 0.1
+lr = 0.01
 
 
 class Optmizers(Enum):
@@ -39,9 +39,9 @@ class Optmizers(Enum):
 
 
 ANN = dict(
-    actor_hidden_layers=[(90, Activation.RELU), (90, Activation.RELU)],
+    actor_hidden_layers=[(69, Activation.RELU), (69, Activation.RELU),(42, Activation.RELU)],
     critic_hidden_layers=[(50, Activation.RELU)],
     shared_hidden_layers=[(70, Activation.RELU)],
     learning_rate=lr,
-    optimizer=Optmizers.SGD,
+    optimizer=Optmizers.Adam,
 )

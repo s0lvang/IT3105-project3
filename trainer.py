@@ -41,12 +41,12 @@ class Trainer:
     def train_policy(self):
         number_in_batch = len(self.states) // 3
         states_batch, distributions_batch, rewards_batch = self.get_batches()
-        self.policy.train_from_batch(self.states, self.distributions, rewards_batch)
+        self.policy.train_from_batch(states_batch, distributions_batch, rewards_batch)
 
     def get_batches(self):
         number_in_batch = len(self.states)
         probability_distribution = [
-            ((i // 13) + 1) / len(self.states) for i in range(len(self.states))
+            ((i // 15) + 1) / len(self.states) for i in range(len(self.states))
         ]
         states_batch, distributions_batch, rewards_batch = zip(
             *random.choices(
@@ -55,4 +55,5 @@ class Trainer:
                 weights=probability_distribution,  # it should favorize later states
             )  # Gives a random sample for training
         )
+        print(len(states_batch), len(distributions_batch), len(rewards_batch))
         return states_batch, distributions_batch, rewards_batch
