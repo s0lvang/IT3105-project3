@@ -8,13 +8,16 @@ from ann_config import ANN as config
 class Policy:
     def __init__(self, size):
         self.size = size
-        inputs = keras.layers.Input(shape=(size + 2,))
-        actor_branch = self.create_actor_branch(inputs)
-        critic_branch = self.create_critic_branch(inputs)
+        shared_layers = config["shared_hidden_layers"]
+        input_layer = keras.layers.Input(shape=(size + 2,))
+        x = input_layer
+        for layer in shared_layers:
+            x = keras.layers.Dense(layer[0], activation=layer[1].value)(x)
+        actor_branch = self.create_actor_branch(x)
+        critic_branch = self.create_critic_branch(x)
         model = keras.Model(
-            inputs=inputs, outputs=[actor_branch, critic_branch], name="hex_net"
+            inputs=input_layer, outputs=[actor_branch, critic_branch], name="hex_net"
         )
-        print(model.summary())
         losses = {
             "actor_output": "categorical_crossentropy",
             "critic_output": "mse",
@@ -26,7 +29,7 @@ class Policy:
         self.model = model
 
     def create_actor_branch(self, x):
-        hidden_layers = config["hidden_layers"]
+        hidden_layers = config["actor_hidden_layers"]
         for layer in hidden_layers:
             x = keras.layers.Dense(layer[0], activation=layer[1].value)(x)
         x = keras.layers.Dense(self.size)(x)
@@ -34,7 +37,7 @@ class Policy:
         return x
 
     def create_critic_branch(self, x):
-        hidden_layers = config["hidden_layers"]
+        hidden_layers = config["critic_hidden_layers"]
         for layer in hidden_layers:
             x = keras.layers.Dense(layer[0], activation=layer[1].value)(x)
         x = keras.layers.Dense(1)(x)
