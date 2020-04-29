@@ -28,19 +28,17 @@ class Hex:
 
         return legal_moves
 
-    def get_action_from_network_output(self, output):  # not done
+    def get_action_from_network_output(self, output):
         action = None
         output = output[0]
         while not self.is_legal_action(action):
-            best_index = np.argmax(output)  # get index with highest value
-            action = (
-                best_index // self.size,
-                best_index % self.size,
-            )  # Get coordinates from flat-list
-            output[best_index] = -math.inf
+            action = np.argmax(output)  # get index with highest value
+            output[action] = -math.inf
         return action
 
-    def is_legal_action(self, action):  # done
+    def is_legal_action(self, action):
+        if action is None:
+            return False
         board = self.board
         slot = board[action]
 
