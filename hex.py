@@ -72,7 +72,7 @@ class Hex:
         board = self.board
         size = self.size
         search_for_other_edge = self.search_for_other_edge
-        is_bottom_left = self.is_bottom_right
+        is_bottom_left = self.is_bottom_left
         owner = 1
 
         for i in range(size):

@@ -45,6 +45,7 @@ class MonteCarloSearchTree:
                 move = game.get_action_from_network_output(prediction)
             else:
                 move = random.choice(game.get_legal_moves())
+
             game.move(move, False)
         return game.reward()
 
