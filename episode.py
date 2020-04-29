@@ -29,12 +29,12 @@ class Episode:
 
             state = node.game_object.get_state()
             distribution = self.mcst.get_distribution(node)
-            reward = self.mcst.exploitation_component(node)
 
             self.states.append(state)
             self.distributions.append(distribution)
-            self.rewards.append(reward)
 
             self.game.move(action, self.verbose)
 
-        return self.states, self.distributions, self.rewards, current_player
+        x = lambda number: -1 if number%2==0 else 1  
+        rewards = [x(i) for i in range(len(self.states))]
+        return self.states, self.distributions, rewards, current_player

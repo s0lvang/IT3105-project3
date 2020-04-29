@@ -33,12 +33,12 @@ class MonteCarloSearchTree:
         rollout_game = Game(*node.game_object.get_state())
 
         prob = random.uniform(0, 1)
-        if prob > self.epsilon:
-            result = self.policy.predict(*rollout_game.get_state())[1][0][
-                0
-            ]  # get value from critic
-        else:
-            result = self.play_game(rollout_game)  # this is our rollout policy
+        #if prob > self.epsilon:
+        #    result = self.policy.predict(*rollout_game.get_state())[1][0][
+        #        0
+        #    ]  # get value from critic
+        #else:
+        result = self.play_game(rollout_game)  # this is our rollout policy
         return result
 
     def play_game(self, game):

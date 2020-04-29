@@ -135,7 +135,7 @@ class Hex:
 
     def reward(self):
         if self.is_end_state():
-            return 1
+            return -1
         return
 
     def draw(self):

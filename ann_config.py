@@ -40,8 +40,8 @@ class Optmizers(Enum):
 
 ANN = dict(
     actor_hidden_layers=[(69, Activation.RELU), (69, Activation.RELU),(42, Activation.RELU)],
-    critic_hidden_layers=[(50, Activation.RELU)],
-    shared_hidden_layers=[(70, Activation.RELU)],
+    critic_hidden_layers=[],
+    shared_hidden_layers=[],
     learning_rate=lr,
     optimizer=Optmizers.Adam,
 )
