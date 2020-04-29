@@ -31,7 +31,7 @@ class Policy:
             if pos[0] == 1:
                 state_in_ints.append(1)
             elif pos[1] == 1:
-                state_in_ints.append(1)
+                state_in_ints.append(2)
             else:
                 state_in_ints.append(0)
         player = [0, 0]
