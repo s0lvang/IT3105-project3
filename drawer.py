@@ -4,36 +4,26 @@ import numpy as np
 
 
 class Drawer:
-    def draw(self, board):
+    def draw(self, game, board, board_size):
+        self.board_size = board_size
+        coords = self.coords
         G = nx.Graph()
         labels = {}
-        nodes = [node for sublist in board for node in sublist]
-        labels = [node.coordinates for node in nodes]
+        nodes = self.state_in_ints(board)
+        labels = [coords(i) for i in range(len(nodes))]
         G.add_nodes_from(labels)
-        for node in nodes:
-            for neighbour in node.neighbours.values():
+        for i in range(len(nodes)):
+            for neighbour in game.get_neighbours(i):
                 if neighbour:
-                    G.add_edge(node.coordinates, neighbour.coordinates)
-        empty_nodes = list(
-            map(
-                lambda node: node.coordinates,
-                filter(lambda node: not node.owner, nodes),
-            )
-        )
-        player1_nodes = list(
-            map(
-                lambda node: node.coordinates,
-                filter(lambda node: not node.owner == 1, nodes),
-            )
-        )
-        player2_nodes = list(
-            map(
-                lambda node: node.coordinates,
-                filter(lambda node: not node.owner == 2, nodes),
-            )
-        )
+                    G.add_edge(coords(i), coords(neighbour))
+
+        empty_nodes = [coords(i) for i in range(len(nodes)) if nodes[i] == 0]
+        player1_nodes = [coords(i) for i in range(len(nodes)) if nodes[i] == 1]
+        player2_nodes = [coords(i) for i in range(len(nodes)) if nodes[i] == 2]
+        board = [coords(i) for i in range(len(nodes))]
 
         pos = self.generate_pos(board)
+
         fig, ax = plt.subplots()
         nx.draw_networkx_nodes(
             G, ax=ax, pos=pos, nodelist=player1_nodes, node_color="r"
@@ -50,20 +40,29 @@ class Drawer:
         plt.axis("off")
         plt.show(block=True)
 
+    def coords(self, index):
+        return (index // self.board_size, index % self.board_size)
+
+    def state_in_ints(self, state):
+        state_in_ints = []
+        for pos in state:
+            if pos[0] == 1:
+                state_in_ints.append(1)
+            elif pos[1] == 1:
+                state_in_ints.append(2)
+            else:
+                state_in_ints.append(0)
+
+        return state_in_ints
+
     def generate_pos(self, board):
         pos = {}
         for i in range(len(board)):
-            for j in range(len(board[i])):
-                pos[board[i][j].coordinates] = [300 + i * -30 + j * 30, 30 * i + 30 * j]
+            node = board[i]
+            i = node[0]
+            j = node[1]
+            pos[node] = [300 + i * -30 + j * 30, 30 * i + 30 * j]
         return pos
-
-    def visualize_game(self, history):
-        for s, a in history:
-            board = Board(game["size"], game["boardType"], state=s)
-            plt.pause(game["timeBetweenFrames"])
-            plt.close("all")
-            self.draw(board.board)
-        plt.clf()
 
     def display_results(self, scores):
         a = np.convolve(scores, np.ones((100,)) / 100, mode="valid")

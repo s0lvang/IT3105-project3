@@ -145,7 +145,7 @@ class Hex:
         return
 
     def draw(self):
-        Drawer().draw(self.board)
+        Drawer().draw(self, self.board, self.size)
 
 
 if __name__ == "__main__":
