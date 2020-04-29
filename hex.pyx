@@ -3,7 +3,7 @@ from direction import Direction
 from drawer import Drawer
 import numpy as np
 import math
-
+import cython
 
 class Hex:
     board = []
@@ -35,7 +35,9 @@ class Hex:
         for row in board:
             for node in row:
                 self.set_neighbours(node)
-
+    
+    @cython.boundscheck(False) # compiler directive
+    @cython.wraparound(False) # compiler directive
     def get_action_from_network_output(self, output):
         action = None
         output = output[0]
@@ -65,16 +67,22 @@ class Hex:
             Direction.LEFT: self.left_neighbour(node),
         }
         node.set_neighbours(neighbours)
-
+    
+    @cython.boundscheck(False) # compiler directive
+    @cython.wraparound(False) # compiler directive
     def is_end_state(self):
         self.set_nodes_unvisted()
         return self.is_player1_winning() or self.is_player2_winning()
 
+    @cython.boundscheck(False) # compiler directive
+    @cython.wraparound(False) # compiler directive
     def set_nodes_unvisted(self):
         for row in self.board:
             for node in row:
                 node.visited = False
 
+    @cython.boundscheck(False) # compiler directive
+    @cython.wraparound(False) # compiler directive
     def is_player1_winning(self):
         for i in range(self.size):
             start_node = self.board[i][0]
@@ -85,6 +93,8 @@ class Hex:
             if self.search_for_other_edge(start_node, start_node, self.is_bottom_right):
                 return True
 
+    @cython.boundscheck(False) # compiler directive
+    @cython.wraparound(False) # compiler directive
     def is_player2_winning(self):
         for i in range(self.size):
             start_node = self.board[0][i]
@@ -94,7 +104,9 @@ class Hex:
 
             if self.search_for_other_edge(start_node, start_node, self.is_bottom_left):
                 return True
-
+    
+    @cython.boundscheck(False) # compiler directive
+    @cython.wraparound(False) # compiler directive
     def search_for_other_edge(self, node, initial_node, is_correct_edge):
         node.visited = True
 
