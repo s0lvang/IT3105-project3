@@ -7,19 +7,39 @@ from ann_config import ANN as config
 
 class Policy:
     def __init__(self, size):
-        hidden_layers = config["hidden_layers"]
         self.size = size
-        model = keras.Sequential()
-        model.add(keras.layers.Dense(10, input_shape=(size + 2,)))
-        for layer in hidden_layers:
-            model.add(keras.layers.Dense(layer[0], activation=layer[1].value))
-        model.add(
-            keras.layers.Dense(size, activation="softmax")
-        )  # TODO make outputlayer generalized.
+        inputs = keras.layers.Input(shape=(size + 2,))
+        actor_branch = self.create_actor_branch(inputs)
+        critic_branch = self.create_critic_branch(inputs)
+        model = keras.Model(
+            inputs=inputs, outputs=[actor_branch, critic_branch], name="hex_net"
+        )
+        print(model.summary())
+        losses = {
+            "actor_output": "categorical_crossentropy",
+            "critic_output": "mse",
+        }
+        loss_weights = {"actor_output": 1.0, "critic_output": 1.0}
         model.compile(
-            optimizer=config["optimizer"].value, loss="categorical_crossentropy"
+            optimizer=config["optimizer"].value, loss=losses, loss_weights=loss_weights
         )
         self.model = model
+
+    def create_actor_branch(self, x):
+        hidden_layers = config["hidden_layers"]
+        for layer in hidden_layers:
+            x = keras.layers.Dense(layer[0], activation=layer[1].value)(x)
+        x = keras.layers.Dense(self.size)(x)
+        x = keras.layers.Activation(activation="softmax", name="actor_output")(x)
+        return x
+
+    def create_critic_branch(self, x):
+        hidden_layers = config["hidden_layers"]
+        for layer in hidden_layers:
+            x = keras.layers.Dense(layer[0], activation=layer[1].value)(x)
+        x = keras.layers.Dense(1)(x)
+        x = keras.layers.Activation(activation="softmax", name="critic_output")(x)
+        return x
 
     def predict(self, state, PID):
         input_array = self.prepend_PID(state, PID)
@@ -30,7 +50,7 @@ class Policy:
         player[PID - 1] = 1
         return player + state
 
-    def train_from_batch(self, states, distributions):
+    def train_from_batch(self, states, distributions, values):
         states_with_PID = [self.prepend_PID(*state) for state in states]
         pred = self.model.predict(np.array(states_with_PID[0:5]))
         normalized_distributions = [
@@ -38,10 +58,12 @@ class Policy:
             / (np.array(distribution).sum(axis=0, keepdims=1) or 1)
             for distribution in distributions
         ]
-        # for i in range(5):
-        #     print(sum(pred[i]), sum(normalized_distributions[i]))
-        #     print(pred[i], normalized_distributions[i])
-        self.model.fit(np.array(states_with_PID), np.array(normalized_distributions))
+        Y = {
+            "actor_output": np.array(normalized_distributions),
+            "critic_output": np.array(values),
+        }
+
+        self.model.fit(np.array(states_with_PID), Y)
 
     def clone_policy(self):
         new_policy = Policy(self.size)
