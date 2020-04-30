@@ -50,15 +50,23 @@ class Policy:
         return self.model.predict(np.array([input_array]))
 
     def prepend_PID(self, state, PID):
+        state_in_ints = []
+        for pos in state:
+            if pos[0] == 1:
+                state_in_ints.append(1)
+            elif pos[1] == 1:
+                state_in_ints.append(2)
+            else:
+                state_in_ints.append(0)
         player = [0, 0]
         player[PID - 1] = 1
-        return player + state
+        return player + state_in_ints
 
     def train_from_batch(self, states, distributions, values):
         states_with_PID = [self.prepend_PID(*state) for state in states]
-        pred = self.model.predict(np.array(states_with_PID[0:5]))
-        normalized_distributions = [ softmax(distribution)
-            for distribution in distributions
+        # pred = self.model.predict(np.array(states_with_PID[0:5]))
+        normalized_distributions = [
+            softmax(distribution) for distribution in distributions
         ]
         Y = {
             "actor_output": np.array(normalized_distributions),

@@ -50,18 +50,16 @@ class MonteCarloSearchTree:
                 move = game.get_action_from_network_output(prediction)
             else:
                 move = random.choice(game.get_legal_moves())
+
             game.move(move, False)
         return game.reward()
 
-    # Game specific
-    # should check the index calculation better
     def get_distribution(self, node):
-        size = hex_config["size"]
-        distribution = [0 for i in range(size ** 2)]
+        size = node.game_object.game.size
+        distribution = [0] * (size ** 2)
         for child in node.children:
-            coordinates = child.move_from_parent
-            index = coordinates[0] * size + coordinates[1]
-            distribution[index] = child.total_number_of_visits
+            action = child.move_from_parent
+            distribution[action] = child.total_number_of_visits
         return distribution
 
     def backpropagate(self, node, result):
