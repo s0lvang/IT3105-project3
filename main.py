@@ -44,6 +44,11 @@ def load_policies(directory):
         policies[file] = pol
     return policies
 
+def play_from_load(game):
+    policies = load_policies(game)
+    print("policies loaded")
+    play_games(policies)
+
 
 def main():
     print("initiate training")
@@ -57,4 +62,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    game = "75r300e-30T08_24-0.8360092490856027"  # 4x4 50r 50e
+    play_from_load(game)
+    # main()

@@ -1,4 +1,4 @@
-hex = dict(size=4)
+hex = dict(size=5)
 
 general = dict(
     verbose=True,
