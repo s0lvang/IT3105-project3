@@ -23,7 +23,7 @@ def play_games(policies):
 def save_policies(policies):
     rollouts = config["rollouts"]
     episodes = config["episodes"]
-    prob = random.uniform(0,1)
+    prob = random.uniform(0, 1)
     time = datetime.datetime.now().strftime("%dT%H_%M")
     filename = f"{rollouts}r{episodes}e-{time}-{prob}"
     if not os.path.exists("saved_models"):
@@ -56,5 +56,13 @@ def main():
     print("done playing")
 
 
+def play_from_load(game):
+    policies = load_policies(game)
+    print("policies loaded")
+    play_games(policies)
+
+
 if __name__ == "__main__":
-    main()
+    game = "50r50e-28T21_53"  # 4x4 50r 50e
+    play_from_load(game)
+    # main()
