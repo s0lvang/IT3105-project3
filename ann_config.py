@@ -42,6 +42,7 @@ ANN = dict(
     actor_hidden_layers=[(69, Activation.RELU), (69, Activation.RELU),(42, Activation.RELU)],
     critic_hidden_layers=[(32, Activation.RELU), (60, Activation.RELU)],
     shared_hidden_layers=[(64, Activation.RELU)],
+    use_critic=True,
     learning_rate=lr,
     optimizer=Optmizers.Adam,
 )
