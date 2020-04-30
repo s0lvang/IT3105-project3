@@ -9,6 +9,7 @@ import os
 import tensorflow as tf
 import random
 
+
 def train_policy():
     trainer = Trainer()
     policies = trainer.train()
@@ -23,7 +24,7 @@ def play_games(policies):
 def save_policies(policies):
     rollouts = config["rollouts"]
     episodes = config["episodes"]
-    prob = random.uniform(0,1)
+    prob = random.uniform(0, 1)
     time = datetime.datetime.now().strftime("%dT%H_%M")
     filename = f"{rollouts}r{episodes}e-{time}-{prob}"
     if not os.path.exists("saved_models"):
@@ -44,6 +45,7 @@ def load_policies(directory):
         policies[file] = pol
     return policies
 
+
 def play_from_load(game):
     policies = load_policies(game)
     print("policies loaded")
@@ -62,6 +64,9 @@ def main():
 
 
 if __name__ == "__main__":
-    game = "75r300e-30T08_24-0.8360092490856027"  # 4x4 50r 50e
+    game = "50r50e-28T21_53"  # 4x4 50r 50e
+    game = "75r300e-30T08_24-0.8360092490856027"  # 5x5 75r 300e
+    game = "75r300e-30T08_22-0.7195683230936835"  # 5x5 75 300e
+
     play_from_load(game)
     # main()
