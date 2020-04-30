@@ -13,16 +13,16 @@
 # )
 
 
-hex = dict(size=4)
+hex = dict(size=6)
 
 general = dict(
     verbose=True,
     starting_player="one",  # one, two or mix
-    episodes=9,
-    amount_of_players=1,
+    episodes=200,
+    amount_of_players=4,
     games_in_series=2,
     c=1,
-    rollouts=1,
+    rollouts=100,
     epsilon=1,
     draw=False,
 )
