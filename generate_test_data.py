@@ -4,10 +4,10 @@ import random
 
 class Generator:
     def __init__(self):
-        self.episodes = 2 
+        self.episodes = 2
         self.states = []
         self.distributions = []
-        self.policy=None
+        self.policy = None
 
     def train(self):
         for episode_number in range(1, self.episodes + 1):

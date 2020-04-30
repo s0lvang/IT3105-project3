@@ -30,7 +30,11 @@ class Hex:
 
     def get_action_from_network_output(self, output):
         action = None
-        output = output[0]
+        if isinstance(output[0][0], np.floating):
+            output = output[0]
+        else:
+            output = output[0][0]
+
         while not self.is_legal_action(action):
             action = np.argmax(output)  # get index with highest value
             output[action] = -math.inf

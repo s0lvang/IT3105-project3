@@ -30,7 +30,7 @@ class Tournament:
         winner = simulated_game.play(self.draw)
         winner = self.determine_winner(winner, player1[0], player2[0])
 
-        if winner == max(player1[0], player2[0]):
+        if int(winner) == max(int(player1[0]), int(player2[0])):
             evaluation = "Just as expected."
             self.update_result(winner, True)
         else:
@@ -56,10 +56,16 @@ class Tournament:
 
     def display_result(self):
         total = self.total_games_played
+        total_games_for_player = (len(self.players) - 1) * 2
         print(f"In total {total} games were played")
         for player in self.wins:
-            percent = round(self.wins[player] / total * 100)
-            print(f"{player} won {percent}% of their games")
+            player_wins = self.wins[player]
+            percent_of_total = round(player_wins / total * 100)
+            percent_of_own = round(player_wins / total_games_for_player * 100)
+
+            print(
+                f"{player} won {percent_of_own}% of their games and {percent_of_total}% of all the games."
+            )
 
         print(
             f"{self.result_as_expected / total * 100}% of the games were won by the player with more training."

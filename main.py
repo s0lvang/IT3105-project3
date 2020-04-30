@@ -7,6 +7,7 @@ from config import hex as hex_config
 import pickle
 import os
 import tensorflow as tf
+import random
 
 
 def train_policy():
@@ -23,8 +24,9 @@ def play_games(policies):
 def save_policies(policies):
     rollouts = config["rollouts"]
     episodes = config["episodes"]
+    prob = random.uniform(0, 1)
     time = datetime.datetime.now().strftime("%dT%H_%M")
-    filename = f"{rollouts}r{episodes}e-{time}"
+    filename = f"{rollouts}r{episodes}e-{time}-{prob}"
     if not os.path.exists("saved_models"):
         os.mkdir("saved_models")
     os.mkdir(f"saved_models/{filename}")
@@ -44,6 +46,12 @@ def load_policies(directory):
     return policies
 
 
+def play_from_load(game):
+    policies = load_policies(game)
+    print("policies loaded")
+    play_games(policies)
+
+
 def main():
     print("initiate training")
     policies = train_policy()
@@ -56,4 +64,9 @@ def main():
 
 
 if __name__ == "__main__":
+    # game = "50r50e-28T21_53"  # 4x4 50r 50e
+    # game = "75r300e-30T08_24-0.8360092490856027"  # 5x5 75r 300e
+    # game = "75r300e-30T08_22-0.7195683230936835"  # 5x5 75 300e
+
+    # play_from_load(game)
     main()
