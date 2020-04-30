@@ -18,6 +18,7 @@ class Episode:
         )
         self.states = []
         self.distributions = []
+        self.rewards = []
 
     def play(self):
         node = self.starting_node
@@ -34,4 +35,6 @@ class Episode:
 
             self.game.move(action, self.verbose)
 
-        return self.states, self.distributions, current_player
+        x = lambda number: -1 if number%2==0 else 1  
+        rewards = [x(i) for i in range(len(self.states))]
+        return self.states, self.distributions, rewards, current_player

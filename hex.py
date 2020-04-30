@@ -38,7 +38,7 @@ class Hex:
 
     def get_action_from_network_output(self, output):
         action = None
-        output = output[0]
+        output = output[0][0]
         while not self.is_legal_action(action):
             best_index = np.argmax(output)  # get index with highest value
             action = (
