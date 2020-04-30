@@ -30,7 +30,7 @@ class Tournament:
         winner = simulated_game.play(self.draw)
         winner = self.determine_winner(winner, player1[0], player2[0])
 
-        if winner == max(player1[0], player2[0]):
+        if int(winner) == max(int(player1[0]), int(player2[0])):
             evaluation = "Just as expected."
             self.update_result(winner, True)
         else:
