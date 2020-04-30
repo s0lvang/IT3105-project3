@@ -4,7 +4,7 @@ from game import Game
 from config import hex as hex_config
 from config import general as config
 import numpy as np
-
+from ann_config import ANN as ann_config
 
 class MonteCarloSearchTree:
     def __init__(self, M, c, policy=None, epsilon=1):
@@ -12,6 +12,7 @@ class MonteCarloSearchTree:
         self.c = c
         self.policy = policy
         self.epsilon = epsilon
+        self.use_critic = ann_config["use_critic"]
 
     def suggest_action(self, root):
         for _ in range(0, self.M):
@@ -33,12 +34,12 @@ class MonteCarloSearchTree:
         rollout_game = Game(*node.game_object.get_state())
 
         prob = random.uniform(0, 1)
-        #if prob > self.epsilon:
-        #    result = self.policy.predict(*rollout_game.get_state())[1][0][
-        #        0
-        #    ]  # get value from critic
-        #else:
-        result = self.play_game(rollout_game)  # this is our rollout policy
+        if prob > self.epsilon and self.use_critic:
+            result = self.policy.predict(*rollout_game.get_state())[1][0][
+                0
+            ]  # get value from critic
+        else:
+            result = self.play_game(rollout_game)  # this is our rollout policy
         return result
 
     def play_game(self, game):
